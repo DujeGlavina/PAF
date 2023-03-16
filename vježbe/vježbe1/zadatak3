@@ -1,0 +1,23 @@
+def broj(x):
+    if '.' in x:
+        x.split('.')
+        x = x[0] + x[2]
+    return x.isnumeric()
+
+
+while True:
+    print("Točka A:")
+    x1 = input("x(A) = ")
+    y1 = input("y(A) = ")
+
+    print("Točka B:")
+    x2 = input("x(B) = ")
+    y2 = input("y(B) = ")
+
+    if broj(x1) and broj(y1) and broj(x2) and broj(y2):
+        break
+    print("Ponovite upis")
+
+k = (int(y2)-int(y1))/(int(x2)-int(x1))
+l = int(y1)-k*int(x1)
+print("p... y = {}x + {}".format(k, l))
