@@ -1,0 +1,7 @@
+import kinematika as kin
+f=int(input("Sila:"))
+m=int(input("masa:"))
+v0=int(input("Početna brzina:"))
+kut0=int(input("Kut:"))
+kin.jednoliko_gibanje(f,m)
+kin.kosi_hitac(v0,kut0)
