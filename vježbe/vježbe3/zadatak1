@@ -1,0 +1,14 @@
+x=5.0
+y=4.935
+print(x-y) 
+#Treba dobiti 0.0650
+#Python izbacuje 0.06500000000000039, što je približno jednako do 15ak decimala
+#Rezultat je drugačiji zbog načina na koji se brojevi zapisuju u memoriji
+a=0.1
+b=0.2
+c=0.3
+if(a+b+c==0.6):
+    print("jednako")
+else:
+    print("različito")
+#Suma nije jednaka 0.6 jer se brojevi ne mogu zapisati u obliku 1/2**n pa python te brojeve aproksimira te se jednakost ne moze ispuniti
