@@ -1,0 +1,9 @@
+import harmonic.oscillator as hos
+import numpy as np
+dt=[0.01, 0.05, 0.001, 0.00001]
+
+for i in dt:
+    hos1=hos.HarmonicOscillator(0.1, 10, 0.3, 0, i)
+    hos1.pokreni()
+    print('dt={} s:'.format(i), 'numerički period: {} s'.format(hos1.period()))
+print('Analitički period: {} s'.format(2*np.pi*np.sqrt(0.1/10)))

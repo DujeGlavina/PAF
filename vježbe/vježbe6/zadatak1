@@ -1,0 +1,22 @@
+import harmonic.oscillator as hos
+import matplotlib.pyplot as plt
+import numpy as np
+
+hos1=hos.HarmonicOscillator(0.1, 10, 0.3, 0, 0.01)
+hos1.pokreni()
+hos1.plot_trajectory()
+
+dt=[0.01, 0.05, 0.001]
+
+plt.title('Harmonic oscillator')
+plt.xlabel('t [s]')
+plt.ylabel('x [m]')
+for i in dt:
+    hos2=hos.HarmonicOscillator(0.1, 10, 0.3, 0, i)
+    hos2.pokreni()
+    plt.scatter(hos2.t, hos2.x, s=1.5)
+
+t=np.linspace(0,2,200)
+x_ana=0.3*np.cos(np.sqrt(10/0.1)*t)
+plt.plot(t, x_ana)
+plt.show()
