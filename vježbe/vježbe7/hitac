@@ -1,0 +1,27 @@
+import projectile as pr
+import matplotlib.pyplot as plt
+
+#Zadatak 1.
+dt=[0.1, 0.01, 0.001]
+for i in range(3):
+    p=pr.Projectile(1, 100, 30, dt[i])
+    p.gibanje()
+    plt.plot(p.x, p.y, label='dt={}'.format(dt[i]))
+plt.title('x-y')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+
+#Zadatak 2.
+e=pr.Projectile(1, 100, 30, 0.01)
+e.gibanje()
+r=pr.Projectile(1, 100, 30, 0.01)
+r.gibanje_rk()
+plt.plot(e.x, e.y, label='Euler dt=0.01')
+plt.plot(r.x, r.y, label='Runke Kutta dt=0.01')
+plt.title('x-y')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.show()

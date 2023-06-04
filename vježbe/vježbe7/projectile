@@ -1,0 +1,72 @@
+import numpy as np
+
+class Projectile:
+    def __init__(self, m, v, kut, dt):
+        self.m=m
+        self.v=v
+        self.kut=kut
+        self.dt=dt
+        self.x=[]
+        self.y=[]
+        self.vx=[]
+        self.vy=[]
+        self.ax=[]
+        self.ay=[]
+        self.t=[]
+
+        self.rho=1.29345
+        self.cd=0.223
+        self.a=0.1
+        self.otp=self.rho*self.cd*self.a/(self.m*2)
+        self.kut*=np.pi/180
+
+        self.t.append(0)
+        self.x.append(0)
+        self.y.append(0)
+        self.vx.append(self.v*np.cos(self.kut))
+        self.vy.append(self.v*np.sin(self.kut))
+        self.ax.append(-np.sign(self.v*np.cos(self.kut))*self.otp*self.v*np.cos(self.kut)**2)
+        self.ay.append(-9.81-np.sign(self.v*np.sin(self.kut))*self.otp*self.v*np.sin(self.kut)**2)
+
+
+    def __move(self):
+        self.ax.append(-np.sign(self.vx[-1])*self.otp*self.vx[-1]**2)
+        self.ay.append(-9.81-np.sign(self.vy[-1])*self.otp*self.vy[-1]**2)
+        self.vx.append(self.vx[-1]+self.ax[-1]*self.dt)
+        self.vy.append(self.vy[-1]+self.ay[-1]*self.dt)
+        self.x.append(self.x[-1]+self.vx[-1]*self.dt)           
+        self.y.append(self.y[-1]+self.vy[-1]*self.dt)
+        self.t.append(self.t[-1]+self.dt)
+
+    def gibanje(self):
+        while self.y[-1] >= 0:
+            self.__move()
+
+    def gibanje_rk(self):
+        while self.y[-1] >= 0:
+            self.__move_rk()
+
+    def __move_rk(self):
+        k1vx = -np.sign(self.vx[-1])*self.otp*self.vx[-1]**2*self.dt
+        k1x = self.vx[-1]*self.dt
+        k2vx = -np.sign(self.vx[-1]+k1vx/2)*self.otp*(self.vx[-1]+k1vx/2)**2*self.dt
+        k2x = (self.vx[-1]+k1vx/2)*self.dt  
+        k3vx = -np.sign(self.vx[-1]+k2vx/2)*self.otp*(self.vx[-1]+k2vx/2)**2*self.dt
+        k3x = (self.vx[-1]+k2vx/2)*self.dt         
+        k4vx = -np.sign(self.vx[-1]+k3vx/2)*self.otp*(self.vx[-1]+k3vx/2)**2*self.dt
+        k4x = (self.vx[-1]+k3vx/2)*self.dt 
+
+        k1vy = (-np.sign(self.vy[-1])*self.otp*self.vy[-1]**2-9.81)*self.dt
+        k1y = self.vy[-1]*self.dt
+        k2vy = (-np.sign(self.vy[-1]+k1vy/2)*self.otp*(self.vy[-1]+k1vy/2)**2-9.81)*self.dt
+        k2y = (self.vy[-1]+k1vy/2)*self.dt  
+        k3vy = (-np.sign(self.vy[-1]+k2vy/2)*self.otp*(self.vy[-1]+k2vy/2)**2-9.81)*self.dt
+        k3y = (self.vy[-1]+k2vy/2)*self.dt         
+        k4vy = (-np.sign(self.vy[-1]+k3vy/2)*self.otp*(self.vy[-1]+k3vy/2)**2-9.81)*self.dt
+        k4y = (self.vy[-1]+k3vy/2)*self.dt 
+
+        self.vx.append(self.vx[-1]+(k1vx+2*k2vx+2*k3vx+k4vx)/6)
+        self.x.append(self.x[-1]+(k1x+2*k2x+2*k3x+k4x)/6)
+        self.vy.append(self.vy[-1]+(k1vy+2*k2vy+2*k3vy+k4vy)/6)
+        self.y.append(self.y[-1]+(k1y+2*k2y+2*k3y+k4y)/6)
+        self.t.append(self.t[-1]+self.dt)
