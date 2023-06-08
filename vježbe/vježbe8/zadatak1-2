@@ -1,0 +1,15 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import polje as em
+
+ax = plt.axes(projection='3d')
+e = em.polje(-1,1,np.array((0,0,0)),np.array((0,0,1)),np.array((0.1,0.1,0.1)))
+p = em.polje(1,1,np.array((0,0,0)),np.array((0,0,1)),np.array((0.1,0.1,0.1)))
+e.gibanje(25)
+p.gibanje(25)
+ax.plot3D(e.x,e.y,e.z,label='elektron')
+ax.plot3D(p.x,p.y,p.z,label='pozitron')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.show()

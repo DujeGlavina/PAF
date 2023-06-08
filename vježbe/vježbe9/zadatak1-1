@@ -1,0 +1,43 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+au=1.486e11
+G=6.67408e-11
+
+class sustav:
+    def __init__(self, ms=1.989e30, mz=5.9742e24, t=365.242*24*3600, dt = 3600*24):
+        self.ms=ms
+        self.mz=mz
+        self.t=t
+        self.t0=0
+        self.dt=dt
+        self.xz=[au]
+        self.yz=[0.1]
+        self.vxz=0
+        self.vyz=29783        
+        self.xs=[0]
+        self.ys=[0]
+        self.vxs=0
+        self.vys=0
+
+    def __move(self):
+        self.t0+=self.dt
+        drx=self.xs[-1] - self.xz[-1]
+        dry=self.ys[-1] - self.yz[-1]
+        self.axz=G*self.ms*drx/((np.sqrt(drx**2+dry**2))**3)
+        self.ayz=G*self.ms*dry/((np.sqrt(drx**2+dry**2))**3)
+        self.vxz+=self.axz*self.dt
+        self.vyz+=self.ayz*self.dt
+        self.xz.append(self.xz[-1]+self.vxz*self.dt)
+        self.yz.append(self.yz[-1]+self.vyz*self.dt)
+
+        self.axs=-G*self.mz*drx/((np.sqrt(drx**2+dry**2))**3)
+        self.ays=-G*self.mz*dry/((np.sqrt(drx**2+dry**2))**3)
+        self.vxs+=self.axs*self.dt
+        self.vys+=self.ays*self.dt
+        self.xs.append(self.xs[-1]+self.vxs*self.dt)
+        self.ys.append(self.ys[-1]+self.vys*self.dt)
+
+    def gibanje(self):
+        while self.t0<=self.t:
+            self.__move()
