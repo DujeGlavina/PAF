@@ -1,0 +1,101 @@
+"""
+Napišite svoj modul za kosi hitac koji će sadržavati: 
+•funkciju koja crta x−y putanju gibanja, ali zaustavlja gibanje u trenutku kada projektil udari o tlo (y=0), 
+•funkciju koja računa maksimalnu visinu koju je tijelo postiglo 
+•funkciju koja računa domet 
+•funkciju koja računa maksimalnu brzinu tijela tijekom gibanja 
+•funkciju kojoj korisnik daje položaj okrugle mete (koordinate središta i radijus), a ona ispisuje jeli meta pogođena
+ te ako nije pogođena ispisuje najbližu udaljenost od mete koja je postignuta tijekom hitca. Neka ista funkcija nacrta putanju gibanja i metu. 
+Za niti jednu od funkcionalnosti ne smijete koristiti gotove formule koje se izvode analitički, već morate osmisliti numerički način rješavanja problema.
+Napišite kod koji će demonstrirati sve funkcije razvijenog modula.
+"""
+import numpy as np
+import matplotlib.pyplot as plt
+
+class Particle:
+    def __init__(self, x0, y0, v0, angle, dt):
+        self.x0=x0
+        self.y0=y0
+        self.v0=v0
+        self.angle=angle*np.pi/180
+        self.dt=dt
+    
+    def initial(self):
+        self.x=[]
+        self.y=[]
+        self.x.append(self.x0)
+        self.y.append(self.y0)
+        self.vx=[]
+        self.vy=[]
+        self.vx.append(self.v0*np.cos(self.angle))
+        self.vy.append(self.v0*np.sin(self.angle))
+
+    def __move(self):
+        self.vx.append(self.v0*np.cos(self.angle))
+        self.vy.append(self.vy[-1] - 9.81*self.dt)
+        self.x.append(self.x[-1] + self.vx[-1]*self.dt)
+        self.y.append(self.y[-1] + self.vy[-1]*self.dt)
+
+    def range(self):
+        while self.y[-1] >= 0:
+            self.__move()
+        return self.x[-1]
+
+    def plot_trajectory(self):
+        plt.plot(self.x, self.y)
+        plt.xlabel('x/m')
+        plt.ylabel('y/m')
+        plt.title('Domet projektila')
+
+        plt.show()
+
+    def max_height(self):
+        return max(self.y)
+        """        
+        max_h = 0
+        for i in range(len(self.y)):
+            if self.y[i] >= max_h:
+                max_h = self.y[i]
+        return max_h
+        """
+    
+    def v(self, vx, vy):
+        return np.sqrt(vx**2+vy**2)
+    
+    def max_velocity(self):
+        """
+        max_vy = 0
+        for vy in self.vy:
+            if np.abs(vy) >= max_vy: 
+                max_vy = np.abs(vy)
+        return np.sqrt(self.vx[0]**2+max_vy**2)
+        """
+        return np.sqrt(self.vx[0]**2 + max(self.vy)**2)
+    
+    def target(self, xt, yt, r):
+        theta = np.linspace(0, 2*np.pi, 1000)
+        xk = xt + r*np.cos(theta)
+        yk= yt + r*np.sin(theta)
+        d0 = self.range()
+
+        plt.gca().set_aspect('equal')
+        plt.plot(xk, yk)
+        self.initial()
+        while (self.x[-1]-xt)**2+(self.y[-1]-yt)**2 > r**2 and self.y[-1] >= 0:
+                self.__move()
+
+        print('Domet projektila  kada se meta radijusa {} m nalazi na ({}, {}) iznosi {} m'.format(r, xt, yt, self.x[-1]))
+        if self.x[-1] != d0:
+            print('Meta je pogođena.')
+        else:
+            print('Meta nije pogođena.')
+            udaljenosti = []
+            for i in range(len(self.x)):
+                udaljenosti.append(np.sqrt((self.x[i]-xt)**2+(self.y[i]-yt)**2))
+            print('Najmanja udaljenost između mete i projektila iznosi {} m'.format(min(udaljenosti) - r))
+        plt.plot(self.x, self.y)
+        plt.xlabel('x/m')
+        plt.ylabel('y/m')
+        plt.title('Projektil i meta')
+        plt.show()
+

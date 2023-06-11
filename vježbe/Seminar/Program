@@ -1,0 +1,12 @@
+import kosi_hitac as kh
+
+projektil = kh.Particle(0, 0, 10, 30, 0.001)
+projektil.initial()
+domet = projektil.range()
+projektil.plot_trajectory()
+print('Domet iznosi {} m'.format(domet))
+print('Maksimalna visina iznosi {} m'.format(projektil.max_height()))
+print('Maksimalna brzina iznosi {} m/s'.format(projektil.max_velocity()))
+
+projektil.initial()
+projektil.target(6,1,0.5)
